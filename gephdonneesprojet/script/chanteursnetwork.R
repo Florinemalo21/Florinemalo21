@@ -1,0 +1,101 @@
+library(visNetwork)
+library(tidyverse)
+
+##############################################Graph interactif avec visnetwork
+
+
+# Définition des edges et des nodes en CSV
+nodes <- read_csv("data/nodeschanteur_r.csv")
+edges <- read_csv("data/edgeschanteur_r.csv")
+
+
+# Définition des positions 
+visNetwork(nodes, edges, width = "100%") %>%
+
+visNetwork(nodes, 
+           edges,
+           main = "bonjour",
+           height = "500px",
+           width = "100%")
+
+#Permet de chercher par id 
+visNetwork(nodes, edges, height = "500px", width = "100%") %>% 
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+# Permet de chercher par groupe
+visNetwork(nodes, edges, height = "500px", width = "100%") %>%
+  visOptions(selectedBy = "group") %>%
+  visLayout(randomSeed = 123)
+
+
+
+
+
+
+#############################################Graph avec igraph
+
+
+library(igraph)
+
+
+# On redéfinit au cas où les edges etc
+nodes <- read_csv("data/nodeschanteur_r.csv")
+edges <- read_csv("data/edgeschanteur_r.csv")
+
+# Creation du nom du graph
+igraph_chanteur <- graph_from_data_frame(d = edges, 
+                                       vertices = nodes, 
+                                       directed = TRUE)
+
+# On appelle le graph pour qu'il vienne
+igraph_chanteur
+
+# on customise le graph 
+plot(igraph_chanteur, 
+     edge.arrow.size = 0.2) 
+
+plot(igraph_chanteur,
+     # options des noeuds
+     vertex.shape = "circle",               
+     vertex.color = "pink",                  
+     vertex.size = 10 + sqrt(nodes$value),  
+     vertex.frame.color = "orchid",           
+     vertex.label.color = "gold",          
+     vertex.label.cex = 0.6,                
+     vertex.label.dist = 2,                 
+     
+     # taille et autres options des liens
+     edge.width = sqrt(nodes$value),        
+     edge.curved = 0.6,                     
+     edge.arrow.size = 0.2,                 
+   
+    
+       # Définition de la spatialisation, j'aime bien kamada kawai
+     
+     
+     layout = layout_with_kk 
+ 
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
